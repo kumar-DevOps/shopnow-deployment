@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: shopnow-backend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: shopnow-backend
+  template:
+    metadata:
+      labels:
+        app: shopnow-backend
+    spec:
+      containers:
+        - name: backend
+          image: your-dockerhub-username/shopnow-backend:latest
+          ports:
+            - containerPort: 5000
+          env:
+            - name: MONGO_URI
+              value: mongodb://shopnow-mongo:27017/shopnow
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: shopnow-backend-service
+spec:
+  selector:
+    app: shopnow-backend
+  ports:
+    - protocol: TCP
+      port: 5000
+      targetPort: 5000
+  type: ClusterIP
