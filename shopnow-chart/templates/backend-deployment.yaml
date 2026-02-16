@@ -19,4 +19,7 @@ spec:
         - containerPort: 5000
         env:
         - name: MONGO_URI
-          value: {{ .Values.mongodb.uri | quote }}
+          valueFrom:
+            secretKeyRef:
+              name: mongo-secret
+              key: uri
