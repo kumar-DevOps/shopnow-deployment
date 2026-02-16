@@ -13,13 +13,10 @@ spec:
         app: shopnow-frontend
     spec:
       containers:
-        - name: frontend
-          image: your-dockerhub-username/shopnow-frontend:latest
-          ports:
-            - containerPort: 3000
-          env:
-            - name: REACT_APP_API_URL
-              value: http://shopnow-backend-service:5000
+      - name: frontend
+        image: kumarDevOps/shopnow-frontend:latest
+        ports:
+        - containerPort: 80
 ---
 apiVersion: v1
 kind: Service
@@ -29,7 +26,6 @@ spec:
   selector:
     app: shopnow-frontend
   ports:
-    - protocol: TCP
-      port: 80
-      targetPort: 3000
+    - port: 80
+      targetPort: 80
   type: LoadBalancer

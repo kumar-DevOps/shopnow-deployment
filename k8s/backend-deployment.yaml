@@ -13,13 +13,16 @@ spec:
         app: shopnow-backend
     spec:
       containers:
-        - name: backend
-          image: your-dockerhub-username/shopnow-backend:latest
-          ports:
-            - containerPort: 5000
-          env:
-            - name: MONGO_URI
-              value: mongodb://shopnow-mongo:27017/shopnow
+      - name: backend
+        image: kumarDevOps/shopnow-backend:latest
+        ports:
+        - containerPort: 5000
+        env:
+        - name: MONGO_URI
+          valueFrom:
+            secretKeyRef:
+              name: mongo-secret
+              key: uri
 ---
 apiVersion: v1
 kind: Service
@@ -29,7 +32,6 @@ spec:
   selector:
     app: shopnow-backend
   ports:
-    - protocol: TCP
-      port: 5000
+    - port: 5000
       targetPort: 5000
   type: ClusterIP
