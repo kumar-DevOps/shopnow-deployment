@@ -1,0 +1,2 @@
+# shopnow-deployment
+MERN
