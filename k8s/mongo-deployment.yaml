@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: shopnow-mongo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: shopnow-mongo
+  template:
+    metadata:
+      labels:
+        app: shopnow-mongo
+    spec:
+      containers:
+        - name: mongo
+          image: mongo:5.0
+          ports:
+            - containerPort: 27017
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: shopnow-mongo
+spec:
+  selector:
+    app: shopnow-mongo
+  ports:
+    - protocol: TCP
+      port: 27017
+      targetPort: 27017
+  type: ClusterIP
