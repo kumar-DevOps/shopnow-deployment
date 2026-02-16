@@ -2,22 +2,26 @@ replicaCount: 2
 
 frontend:
   image:
-    repository: your-dockerhub-user/shopnow-frontend
+    repository: kumarDevOps/shopnow-frontend
     tag: latest
+    pullPolicy: IfNotPresent
   service:
     type: LoadBalancer
     port: 80
 
 backend:
   image:
-    repository: your-dockerhub-user/shopnow-backend
+    repository: kumarDevOps/shopnow-backend
     tag: latest
+    pullPolicy: IfNotPresent
   service:
     type: ClusterIP
     port: 5000
 
 mongodb:
-  uri: "mongodb://mongo:27017/shopnow"
+  username: "shopuser"
+  password: "shoppass"
+  uri: "mongodb://shopuser:shoppass@mongo:27017/shopnow"
 
 ingress:
   enabled: true
