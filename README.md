@@ -1,41 +1,50 @@
-Project Overview
-This repository contains Kubernetes manifests, a Helm chart, and a Jenkins pipeline for deploying the ShopNow MERN application (MongoDB, Express.js, React.js, Node.js).
-
-Components
-Frontend (React): Served via Nginx, exposed with a LoadBalancer.
-
-Backend (Node.js/Express): Exposed internally via ClusterIP, connects to MongoDB.
-
-MongoDB: Connection string managed via Kubernetes Secret.
-
-Helm Chart: Provides configurable deployments for FE/BE.
-
-Jenkins Pipeline: Automates build, push, and deploy steps.
-
 Deployment Steps
-Build Docker Images
+1. Build Docker Images
+bash
+docker build -t kumarDevOps/shopnow-frontend ./frontend
+docker build -t kumarDevOps/shopnow-backend ./backend
+2. Push Images to DockerHub
+bash
+docker push kumarDevOps/shopnow-frontend
+docker push kumarDevOps/shopnow-backend
+3. Deploy with Helm
+bash
+helm upgrade --install shopnow ./shopnow-chart -f ./shopnow-chart/values.yaml
+4. Access Application
+Frontend: via LoadBalancer IP (e.g., http://<LB-IP>).
+
+Backend: via ClusterIP (used internally by frontend).
+
+Ingress: routes / to frontend and /api to backend.
+
+🔑 Helm Usage
+Install:
 
 bash
-docker build -t <dockerhub-user>/shopnow-frontend ./frontend
-docker build -t <dockerhub-user>/shopnow-backend ./backend
-Push Images
+helm install shopnow ./shopnow-chart
+Upgrade:
 
 bash
-docker push <dockerhub-user>/shopnow-frontend
-docker push <dockerhub-user>/shopnow-backend
-Deploy with Helm
+helm upgrade shopnow ./shopnow-chart
+Uninstall:
 
 bash
-helm upgrade --install shopnow ./helm/shopnow-chart -f ./helm/shopnow-chart/values.yaml
-Access Application
+helm uninstall shopnow
+🛠️ Jenkins Pipeline
+The Jenkinsfile automates:
 
-Frontend: via LoadBalancer IP
+Build frontend and backend Docker images.
 
-Backend: via ClusterIP (used internally by frontend)
+Push images to DockerHub.
 
-Challenges & Solutions
-Secrets Management: Used secrets.yaml for MongoDB URI instead of hardcoding.
+Deploy using Helm into Kubernetes.
 
-Ingress Routing: Configured / for frontend and /api for backend.
+⚠️ Challenges & Solutions
+Secrets Management:
+Used secrets.yaml to store MongoDB credentials securely instead of hardcoding.
 
-CI/CD: Jenkins pipeline ensures consistent builds and deployments.
+Ingress Routing:
+Configured ingress to route / → frontend and /api → backend.
+
+CI/CD Automation:
+Jenkins pipeline ensures consistent builds and deployments across environments.
